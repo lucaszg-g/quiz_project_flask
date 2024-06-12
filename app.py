@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 # Configurações
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sua_chave_secreta'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///1.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///teste1.db'
 
 db = SQLAlchemy(app)
 
@@ -106,7 +106,7 @@ def excluir_questao(questao_id):
 
 @app.route('/entrar', methods=['POST'])
 def entrar():
-    if request.form['nome'] == 'admin' and request.form['senha'] == 'admin':
+    if request.form['nome'] == '123' and request.form['senha'] == '123':
         session['username'] = 'admin'
         return redirect(url_for('admin'))
 
