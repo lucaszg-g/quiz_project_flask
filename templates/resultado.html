@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %} Admin Page {% endblock %}
+
+{% block content %}
+
+    <h1>Resultado do Quiz</h1>
+    <p>Você acertou {{ score }} de 10 perguntas.</p>
+    <a href="{{ url_for('index') }}">Voltar ao Início</a>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %} Admin Page {% endblock %}
+
+{% block content %}
+
+    <h1>{{ questao.pergunta }}</h1>
+    <form method="POST" action="{{ url_for('pergunta') }}">
+        <input type="hidden" name="questao_id" value="{{ questao.id }}">
+        {% for alternativa in questao.get_alternativas() %}
+            <div>
+                <input type="radio" id="resposta" name="resposta" value="{{ alternativa }}" required>
+                <label for="resposta" class="form-label">{{ alternativa }}</label>
+            </div>
+        {% endfor %}
+        <button type="submit">Próxima</button>
+    </form>
+
+{% endblock %}
+
