@@ -2,9 +2,12 @@
 {% block title %} Admin Page {% endblock %}
 
 {% block content %}
-
-    <h1>Resultado do Quiz</h1>
-    <p>Você acertou {{ score }} de 10 perguntas.</p>
-    <a href="{{ url_for('index') }}">Voltar ao Início</a>
+    <main class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+<div class="border rounded shadow p-5" style="width: 400px;">
+        <h1>Resultado do Quiz</h1>
+            <p>Você acertou {{ score }} de 10 perguntas.</p>
+            <a href="{{ url_for('index') }}">Voltar ao Início</a>
+</div>
+    </main>
 
 {% endblock %}

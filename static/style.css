@@ -1,0 +1,42 @@
+body {
+    width:100%;
+    height:100vh;
+    background-color:#1c1c1c;
+    /*background-image: url('/static/img/quadroverde2.png'); !* Caminho para a imagem de fundo *!*/
+    /*background-size: cover; !* Para a imagem cobrir toda a área *!*/
+    /*background-position: center; !* Centraliza a imagem *!*/
+    /*background-repeat: no-repeat; !* Evita repetição da imagem *!*/
+}
+.pergunta {
+      font-family: "Permanent Marker", cursive;
+      font-weight: 400;
+      font-style: normal;
+    background: #243320;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.border{
+    background: #1c1c1c;
+     border-radius: 350px;
+}
+.alternative {
+    display: inline-block;
+    background: #1c1c1c;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px #0a0a0a, -5px -5px 10px #2e2e2e;
+    padding: 10px 20px;
+    margin: 10px 0;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: box-shadow 0.3s ease, background 0.3s ease;
+    width: 100%; /* Certifique-se de que os botões ocupem toda a largura disponível */
+
+}
+
+.alternative label {
+    margin-left: 10px;
+}

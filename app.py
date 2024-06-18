@@ -134,11 +134,11 @@ def quiz():
     session['score'] = 0
     session['question_index'] = 0
     session['answers'] = []
-    return redirect(url_for('pergunta'))
+    return redirect(url_for('pergunta', question_index=session['question_index']))
 
 
-@app.route('/pergunta', methods=['GET', 'POST'])
-def pergunta():
+@app.route('/pergunta/<int:question_index>', methods=['GET', 'POST'])
+def pergunta(question_index):
     if request.method == 'POST':
         resposta = request.form['resposta']
         questao_id = request.form['questao_id']
@@ -147,6 +147,7 @@ def pergunta():
         if resposta == questao.get_gabarito():
             session['score'] += 1
         session['question_index'] += 1
+        return redirect(url_for('pergunta', question_index=session['question_index']))
 
     if session['question_index'] < 10:
         questao = Questao.query.offset(session['question_index']).first()
@@ -156,6 +157,13 @@ def pergunta():
     else:
         return redirect(url_for('resultado'))
 
+@app.route('/voltar', methods=['POST'])
+def voltar():
+    if 'question_index' == 0:
+        return redirect(url_for('pergunta'))
+    else:
+        session['question_index'] -= 1
+        return redirect(url_for('pergunta', question_index=session['question_index']))
 
 @app.route('/resultado')
 def resultado():
