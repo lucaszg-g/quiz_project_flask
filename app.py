@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
+import random
 
 # Configurações
 app = Flask(__name__)
@@ -131,17 +132,29 @@ def devs():
 
 @app.route('/quiz')
 def quiz():
+    questoes = Questao.query.all()
+    if len(questoes) < 10:
+        flash('Não há perguntas suficientes no banco de dados!', 'warning')
+        return redirect(url_for('index'))
+
+    # Selecionar 10 questões aleatórias
+    questoes_aleatorias = random.sample(questoes, 10)
+    session['questoes_ids'] = [questao.id for questao in questoes_aleatorias]
     session['score'] = 0
     session['question_index'] = 0
     session['answers'] = []
+
     return redirect(url_for('pergunta', question_index=session['question_index']))
 
 
 @app.route('/pergunta/<int:question_index>', methods=['GET', 'POST'])
 def pergunta(question_index):
+    if question_index >= 10:
+        return redirect(url_for('resultado'))
+
     if request.method == 'POST':
         resposta = request.form['resposta']
-        questao_id = request.form['questao_id']
+        questao_id = session['questoes_ids'][question_index]
         questao = Questao.query.get(questao_id)
         session['answers'].append((questao_id, resposta))
         if resposta == questao.get_gabarito():
@@ -149,21 +162,10 @@ def pergunta(question_index):
         session['question_index'] += 1
         return redirect(url_for('pergunta', question_index=session['question_index']))
 
-    if session['question_index'] < 10:
-        questao = Questao.query.offset(session['question_index']).first()
-        if not questao:
-            return redirect(url_for('resultado'))
-        return render_template('pergunta.html', questao=questao)
-    else:
-        return redirect(url_for('resultado'))
+    questao_id = session['questoes_ids'][question_index]
+    questao = Questao.query.get(questao_id)
+    return render_template('pergunta.html', questao=questao)
 
-@app.route('/voltar', methods=['POST'])
-def voltar():
-    if 'question_index' == 0:
-        return redirect(url_for('pergunta'))
-    else:
-        session['question_index'] -= 1
-        return redirect(url_for('pergunta', question_index=session['question_index']))
 
 @app.route('/resultado')
 def resultado():
