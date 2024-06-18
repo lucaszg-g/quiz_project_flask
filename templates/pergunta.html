@@ -6,7 +6,7 @@
 {#    <div class="question-container">#}
     <div class="border rounded shadow p-5" style="width: 1000px; height:500px;">
                 <h1 class="pergunta">{{ questao.pergunta }}</h1>
-        <form method="POST" action="{{ url_for('pergunta') }}">
+        <form method="POST" action="{{ url_for('pergunta', question_index=session['question_index']) }}">
             <input type="hidden" name="questao_id" value="{{ questao.id }}">
             {% for alternativa in questao.get_alternativas() %}
                 <div class="alternative">
@@ -15,6 +15,9 @@
                 </div>
             {% endfor %}
             <button type="submit" class="btn btn-primary">Próxima</button>
+        </form>
+        <form action="{{ url_for('pergunta', question_index=session['question_index']) }}">
+            <button method="POST" class="btn btn-primary" type="submit">Voltar</button>
         </form>
     </div>
 
