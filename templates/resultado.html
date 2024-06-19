@@ -6,7 +6,10 @@
 <div class="border rounded shadow p-5" style="width: 400px;">
         <h1>Resultado do Quiz</h1>
             <p>Você acertou {{ score }} de 10 perguntas.</p>
-            <a href="{{ url_for('index') }}">Voltar ao Início</a>
+    <div class="d-flex justify-content-center align-items-center">
+       <a href="{{ url_for('index') }}" class="btn" >Voltar ao Início</a>
+    </div>
+
 </div>
     </main>
 

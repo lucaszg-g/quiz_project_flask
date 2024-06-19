@@ -3,26 +3,18 @@
 
 {% block content %}
     <div class="d-flex justify-content-center align-items-center flex-column gap-3">
-{#    <div class="question-container">#}
-    <div class="border rounded shadow p-5" style="width: 1000px; height:500px;">
-                <h1 class="pergunta">{{ questao.pergunta }}</h1>
-        <form method="POST" action="{{ url_for('pergunta', question_index=session['question_index']) }}">
-            <input type="hidden" name="questao_id" value="{{ questao.id }}">
-            {% for alternativa in questao.get_alternativas() %}
-                <div class="alternative">
-                    <input class="form-check-input" type="radio" id="resposta" name="resposta" value="{{ alternativa }}" required>
-                    <label for="resposta" class="form-label">{{ alternativa }}</label>
-                </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-primary">Próxima</button>
-        </form>
-        <form action="{{ url_for('pergunta', question_index=session['question_index']) }}">
-            <button method="POST" class="btn btn-primary" type="submit">Voltar</button>
-        </form>
+        <div class="border rounded shadow p-5" style="width: 1000px;">
+            <h1 class="pergunta" style="text-align: left;">{{ questao.pergunta }}</h1>
+            <form method="POST" action="{{ url_for('pergunta', question_index=session['question_index']) }}">
+                <input type="hidden" name="questao_id" value="{{ questao.id }}">
+                {% for alternativa in questao.get_alternativas() %}
+                    <div class="alternative">
+                        <input class="form-check-input" type="radio" id="resposta{{ loop.index }}" name="resposta" value="{{ alternativa }}" required>
+                        <label for="resposta{{ loop.index }}" class="form-label">{{ alternativa }}</label>
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn">Próxima</button>
+            </form>
+        </div>
     </div>
-
-{#    </div>#}
-    </div>
-
-
 {% endblock %}
