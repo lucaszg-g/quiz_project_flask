@@ -5,7 +5,7 @@ import random
 # Configurações
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sua_chave_secreta'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///teste1.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///banco_de_questoes.db'
 
 db = SQLAlchemy(app)
 
@@ -141,7 +141,7 @@ def quiz():
     questoes_aleatorias = random.sample(questoes, 10)
     session['questoes_ids'] = [questao.id for questao in questoes_aleatorias]
     session['score'] = 0
-    session['question_index'] = 0
+    session['question_index'] = 1
     session['answers'] = []
 
     return redirect(url_for('pergunta', question_index=session['question_index']))
