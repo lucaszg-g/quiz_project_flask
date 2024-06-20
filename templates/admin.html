@@ -2,87 +2,109 @@
 {% block title %} Admin Page {% endblock %}
 
 {% block content %}
-    <h1 class="display-4 monospace"> Admin Page </h1>
+    <div class="container">
+        <h1 class="display-4 text-center">Admin Page</h1>
 
-    {% if 'username' not in session %}
-        <div class="row justify-content-center">
-            <!-- Formulário de Login -->
-            <div class="col-md-4">
-                <div id="login-popup" class="shadow p-3 mb-5 bg-body-tertiary rounded">
-                    <form method="POST" action="{{ url_for('entrar') }}" class="form-container">
-                        <h2 class="font-monospace">Entrar</h2>
-                        <hr>
-                        <div class="form-group mt-1">
-                            <label for="nome" class="form-label">Nome:</label>
-                            <input type="text" name="nome" id="nome" class="form-control" required>
-                        </div>
-                        <div class="form-group mt-1">
-                            <label for="senha" class="form-label">Senha:</label>
-                            <input type="password" name="senha" id="senha" class="form-control" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-3">Entrar</button>
-                    </form>
+        {% if 'username' not in session %}
+            <div class="row justify-content-center">
+                <!-- Formulário de Login -->
+                <div class="col-md-4">
+                    <div id="login-popup" class="shadow p-3 mb-5 bg-body-tertiary rounded">
+                        <form method="POST" action="{{ url_for('entrar') }}" class="form-container">
+                            <h2 class="font-monospace">Entrar</h2>
+                            <hr>
+                            <div class="form-group mt-1">
+                                <label for="nome" class="form-label">Nome:</label>
+                                <input type="text" name="nome" id="nome" class="form-control" required>
+                            </div>
+                            <div class="form-group mt-1">
+                                <label for="senha" class="form-label">Senha:</label>
+                                <input type="password" name="senha" id="senha" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Entrar</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% else %}
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div id="adicionar_pergunta" class="shadow p-3 mb-5 bg-body-tertiary rounded">
-                    <form method="POST" action="{{ url_for('adicionar_pergunta') }}" class="form-container">
-                        <label for="pergunta" class="form-label">Pergunta:</label>
-                        <input type="text" name="pergunta" id="pergunta" class="form-control" required>
+        {% else %}
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div id="adicionar_pergunta" class="shadow p-3 mb-5 bg-body-tertiary rounded">
+                        <form method="POST" action="{{ url_for('adicionar_pergunta') }}" class="form-container">
+                            <div class="form-group mt-1">
+                                <label for="pergunta" class="form-label">Pergunta:</label>
+                                <input type="text" name="pergunta" id="pergunta" class="form-control" required>
+                            </div>
+                            <div class="form-group mt-1">
+                                <label for="nova_alternativa" class="form-label">Nova Alternativa:</label>
+                                <input type="text" id="nova_alternativa" class="form-control">
+                            </div>
+                            <button type="button" class="btn btn-secondary mt-2" onclick="adicionarAlternativa()">Adicionar Alternativa</button>
 
-                        <label for="nova_alternativa" class="form-label">Nova Alternativa:</label>
-                        <input type="text" id="nova_alternativa" class="form-control">
-                        <button type="button" class="btn btn-secondary mt-2" onclick="adicionarAlternativa()">Adicionar Alternativa</button>
+                            <ul id="lista_alternativas" class="list-group mt-3">
+                                <!-- Alternativas serão adicionadas aqui -->
+                            </ul>
 
-                        <ul id="lista_alternativas" class="list-group mt-3">
-                            <!-- Alternativas serão adicionadas aqui -->
-                        </ul>
+                            <input type="hidden" name="alternativas" id="alternativas_hidden">
+                            <input type="hidden" name="gabarito" id="gabarito_hidden">
 
-                        <input type="hidden" name="alternativas" id="alternativas_hidden">
-                        <input type="hidden" name="gabarito" id="gabarito_hidden">
-
-                        <button type="submit" class="btn btn-primary mt-3">Enviar</button>
-                    </form>
-                    <a href="{{ url_for('sair') }}" class="btn btn-danger mt-2">Sair</a>
+                            <button type="submit" class="btn btn-primary mt-3">Enviar</button>
+                        </form>
+                        <a href="{{ url_for('sair') }}" class="btn btn-danger mt-2">Sair</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        {% if questoes %}
-            <div class="row justify-content-center mt-5">
-                <div class="col-md-8">
-                    <h2 class="font-monospace">Perguntas Existentes</h2>
-                    <ul class="list-group">
-                        {% for questao in questoes %}
-                            <li class="list-group-item">
-                                <div class="d-flex justify-content-between">
-                                    <span class="text-truncate">{{ questao.pergunta }}</span>
-                                    <div>
-                                        <button class="btn btn-info btn-sm" onclick="mostrarAlternativas({{ questao.id }})">Mostrar Alternativas</button>
-                                        <a href="{{ url_for('excluir_questao', questao_id=questao.id) }}" class="btn btn-danger btn-sm">Excluir</a>
+            {% if questoes %}
+                <div class="row justify-content-center mt-5">
+                    <div class="col-md-8">
+                        <h2 class="font-monospace">Perguntas Existentes ({{ questoes|length }})</h2>
+                        <button class="btn btn-info mb-3" onclick="togglePerguntas()">Mostrar Perguntas</button>
+                        <ul class="list-group d-none" id="lista_perguntas">
+                            {% for questao in questoes %}
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-truncate">{{ questao.pergunta }}</span>
+                                        <div>
+                                            <button class="btn btn-info btn-sm" onclick="mostrarAlternativas({{ questao.id }})">Mostrar Alternativas</button>
+                                            <a href="{{ url_for('excluir_questao', questao_id=questao.id) }}" class="btn btn-danger btn-sm">Excluir</a>
+                                        </div>
                                     </div>
-                                </div>
-                                <ul class="list-group mt-2 d-none" id="alternativas-{{ questao.id }}">
-                                    {% for alternativa in questao.get_alternativas() %}
-                                        <li class="list-group-item">{{ alternativa }}</li>
-                                    {% endfor %}
-                                    <li class="list-group-item list-group-item-success">Gabarito: {{ questao.gabarito }}</li>
-                                </ul>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                                    <ul class="list-group mt-2 d-none" id="alternativas-{{ questao.id }}">
+                                        {% for alternativa in questao.get_alternativas() %}
+                                            <li class="list-group-item">{{ alternativa }}</li>
+                                        {% endfor %}
+                                        <li class="list-group-item list-group-item-success">Gabarito: {{ questao.gabarito }}</li>
+                                    </ul>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         {% endif %}
-    {% endif %}
+    </div>
 {% endblock %}
 
 {% block script %}
+    <style>
+        .container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .form-container {
+            max-width: 100%;
+        }
+        #adicionar_pergunta {
+            margin-top: 20px;
+        }
+        .list-group-item {
+            word-break: break-word;
+        }
+    </style>
     <script>
         let alternativas = [];
         let gabaritoIndex = null;
+
         function adicionarAlternativa() {
             const alternativaInput = document.getElementById('nova_alternativa');
             const alternativa = alternativaInput.value.trim();
@@ -92,6 +114,7 @@
                 alternativaInput.value = '';
             }
         }
+
         function atualizarLista() {
             const lista = document.getElementById('lista_alternativas');
             lista.innerHTML = '';
@@ -102,22 +125,24 @@
                     li.classList.add('list-group-item-success');
                 }
                 li.innerHTML = `
-                       ${alt}
-                       <div>
-                           <button type="button" class="btn btn-outline-success btn-sm me-2" onclick="marcarGabarito(${index})">Marcar como Gabarito</button>
-                           <button type="button" class="btn btn-outline-danger btn-sm" onclick="removerAlternativa(${index})">Remover</button>
-                       </div>
-                   `;
+                    ${alt}
+                    <div>
+                        <button type="button" class="btn btn-outline-success btn-sm me-2" onclick="marcarGabarito(${index})">Marcar como Gabarito</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removerAlternativa(${index})">Remover</button>
+                    </div>
+                `;
                 lista.appendChild(li);
             });
             document.getElementById('alternativas_hidden').value = alternativas.join(';');
         }
+
         function marcarGabarito(index) {
             gabaritoIndex = index;
             const gabarito = alternativas[index];
             document.getElementById('gabarito_hidden').value = gabarito;
             atualizarLista();
         }
+
         function removerAlternativa(index) {
             alternativas.splice(index, 1);
             if (gabaritoIndex === index) {
@@ -128,13 +153,17 @@
             }
             atualizarLista();
         }
+
         function mostrarAlternativas(id) {
             const lista = document.getElementById('alternativas-' + id);
-            if (lista.classList.contains('d-none')) {
-                lista.classList.remove('d-none');
-            } else {
-                lista.classList.add('d-none');
-            }
+            lista.classList.toggle('d-none');
+        }
+
+        function togglePerguntas() {
+            const listaPerguntas = document.getElementById('lista_perguntas');
+            const button = document.querySelector('.btn-info.mb-3');
+            listaPerguntas.classList.toggle('d-none');
+            button.textContent = listaPerguntas.classList.contains('d-none') ? 'Mostrar Perguntas' : 'Ocultar Perguntas';
         }
     </script>
 {% endblock %}
