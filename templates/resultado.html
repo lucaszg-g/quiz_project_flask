@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %} Resultado {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="display-4 text-center">Resultado do Quiz</h1>
+        <p class="text-center">Você acertou {{ score }} de 10 perguntas.</p>
+
+        <h2>Perguntas Acertadas</h2>
+        {% if questoes_acertadas %}
+            <ul class="list-group mb-5">
+                {% for questao, resposta in questoes_acertadas %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <span>{{ questao.get_pergunta() }}</span>
+                            <div>
+                                <button class="btn btn-info btn-sm" onclick="mostrarAlternativas({{ questao.id }})">Mostrar Alternativas</button>
+                            </div>
+                        </div>
+                        <ul class="list-group mt-2 d-none" id="alternativas-{{ questao.id }}">
+                            {% for alternativa in questao.get_alternativas() %}
+                                <li class="list-group-item {% if alternativa == questao.get_gabarito() %}list-group-item-success{% endif %}">
+                                    {{ alternativa }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Nenhuma pergunta acertada.</p>
+        {% endif %}
+
+        <h2>Perguntas Erradas</h2>
+        {% if questoes_erradas %}
+            <ul class="list-group mb-5">
+                {% for questao, resposta in questoes_erradas %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <span>{{ questao.get_pergunta() }}</span>
+                            <div>
+                                <button class="btn btn-info btn-sm" onclick="mostrarAlternativas({{ questao.id }})">Mostrar Alternativas</button>
+                            </div>
+                        </div>
+                        <ul class="list-group mt-2 d-none" id="alternativas-{{ questao.id }}">
+                            {% for alternativa in questao.get_alternativas() %}
+                                <li class="list-group-item {% if alternativa == questao.get_gabarito() %}list-group-item-success{% elif alternativa == resposta %}list-group-item-danger{% endif %}">
+                                    {{ alternativa }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Nenhuma pergunta errada.</p>
+        {% endif %}
+
+        <div class="d-flex justify-content-center align-items-center">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Voltar ao Início</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function mostrarAlternativas(id) {
+            const lista = document.getElementById('alternativas-' + id);
+            lista.classList.toggle('d-none');
+        }
+    </script>
+{% endblock %}
